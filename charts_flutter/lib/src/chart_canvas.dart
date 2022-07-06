@@ -73,12 +73,13 @@ class ChartCanvas implements common.ChartCanvas {
   @override
   void drawLine(
       {required List<Point> points,
-      Rectangle<num>? clipBounds,
-      common.Color? fill,
-      common.Color? stroke,
-      bool? roundEndCaps,
-      double? strokeWidthPx,
-      List<int>? dashPattern}) {
+        Rectangle<num>? clipBounds,
+        common.Color? fill,
+        common.Color? stroke,
+        bool? smoothLine,
+        bool? roundEndCaps,
+        double? strokeWidthPx,
+        List<int>? dashPattern}) {
     LinePainter.draw(
         canvas: canvas,
         paint: _paint,
@@ -86,6 +87,7 @@ class ChartCanvas implements common.ChartCanvas {
         clipBounds: clipBounds,
         fill: fill,
         stroke: stroke,
+        smoothLine: smoothLine,
         roundEndCaps: roundEndCaps,
         strokeWidthPx: strokeWidthPx,
         dashPattern: dashPattern);
@@ -117,10 +119,11 @@ class ChartCanvas implements common.ChartCanvas {
   @override
   void drawPolygon(
       {required List<Point> points,
-      Rectangle<num>? clipBounds,
-      common.Color? fill,
-      common.Color? stroke,
-      double? strokeWidthPx}) {
+        Rectangle<num>? clipBounds,
+        common.Color? fill,
+        common.Color? stroke,
+        double? strokeWidthPx,
+        bool smoothLine = false}) {
     PolygonPainter.draw(
         canvas: canvas,
         paint: _paint,
@@ -128,7 +131,8 @@ class ChartCanvas implements common.ChartCanvas {
         clipBounds: clipBounds,
         fill: fill,
         stroke: stroke,
-        strokeWidthPx: strokeWidthPx);
+        strokeWidthPx: strokeWidthPx,
+        smoothLine: smoothLine);
   }
 
   /// Creates a bottom to top gradient that transitions [fill] to transparent.
@@ -169,7 +173,9 @@ class ChartCanvas implements common.ChartCanvas {
         _drawForwardHatchPattern(fillRectBounds, canvas,
             fill: fill!, drawAreaBounds: drawAreaBounds);
         break;
-
+      case common.FillPatternType.gradient:
+        _drawGradientPattern(fillRectBounds, canvas, fill: fill);
+        break;
       case common.FillPatternType.solid:
       default:
         // Use separate rect for drawing stroke
@@ -435,6 +441,25 @@ class ChartCanvas implements common.ChartCanvas {
           strokeWidthPx: fillWidthPx,
           shader: lineShader);
     }
+  }
+
+  _drawGradientPattern(
+      Rectangle<num> bounds,
+      Canvas canvas, {
+        common.Color? fill,}) {
+    fill ??= common.StyleFactory.style.black;
+
+    // TODO clean this up
+    _paint.style = PaintingStyle.fill;
+    var gradient = new LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          new Color.fromARGB(255, fill.r, fill.g, fill.b),
+          new Color.fromARGB(50, fill.r, fill.g, fill.b)   //make base of bar a little darker
+        ]);
+    _paint.shader = gradient.createShader(_getRect(bounds));
+    canvas.drawRect(_getRect(bounds), _paint);
   }
 
   @override
