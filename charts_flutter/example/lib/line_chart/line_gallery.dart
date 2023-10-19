@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:example/line_chart/smooth.dart';
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'animation_zoom.dart';
@@ -31,6 +32,12 @@ import 'stacked_area_nulls.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Smooth Line Chart',
+      subtitle: 'With a single series and smooth line and default line point highlighter',
+      childBuilder: () => new SmoothLineChart.withRandomData(),
+    ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),
       title: 'Simple Line Chart',
