@@ -8,31 +8,25 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  # Pointing this to a local path allows for pointing to the latest code
-  # in Github for open source development.
-  #
-  # The pub version of charts_flutter will point to the pub version of charts_common.
-  # The latest pub version is commented out and shown below as an example.
-  #charts_common: ^0.12.0
-  #charts_common:
-  #  path: ../charts_common
+  # Though charts_common and charts_flutter are in the same repo
+  # we still need to reference it by git as if it were in its own
   charts_common:
     git:
       url: https://github.com/devs-emporia/charts.git
       path: charts_common
-      ref: plot_gradient_lines
+      ref: 2023.10.31
 
   collection: ^1.14.5
   flutter:
     sdk: flutter
-  intl: '>=0.15.2 <0.18.0'
+  intl: ^0.18.1
   logging: ^1.0.2
   meta: ^1.1.1
 
 
 dev_dependencies:
   yaml: ^3.0.0
-  analyzer: ^4.1.0
+  analyzer: ^5.13.0
   code_builder: ^4.1.0
   mockito: ^5.2.0
   build_runner:
